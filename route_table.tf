@@ -1,5 +1,5 @@
 # Route to internet
-resource "aws_route_table" "route" {
+resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.demo_vpc.id
 
   route {
@@ -8,22 +8,32 @@ resource "aws_route_table" "route" {
   }
 
   tags = {
-    Name = "route to internet"
+    Name = "Public RT"
   }
 }
 
+resource "aws_route_table" "private_rt" {
+  vpc_id = aws_vpc.demo_vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gateway.id
+  }
+  
+  tags = {
+    Name = "Private RT"
+  }
+}
 # Associating public subnets to public route table
-resource "aws_route_table_association" "public_rt" {
-  subnet_id      = var.subnet_pub_cidr[count.index]
-  count          = length(var.subnet_pub_cidr)
-  route_table_id = aws_route_table.route.id
+resource "aws_route_table_association" "public_rt_association" {
+  subnet_id      = aws_subnet.pub_sub_1.id
+  route_table_id = aws_route_table.public_rt.id
+  
 
 }
 
 # Associating private subnets to private route table
-resource "aws_route_table_association" "private_rt" {
-  subnet_id      = var.subnet_pvt_cidr[count.index]
-  count          = length(var.subnet_pvt_cidr)
-  route_table_id = aws_route_table.route.id
+resource "aws_route_table_association" "private_rt_association" {
+  subnet_id      = aws_subnet.pvt_sub_1.id
+  route_table_id = aws_route_table.private_rt.id
 
 }
