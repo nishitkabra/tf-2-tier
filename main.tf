@@ -8,12 +8,12 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
 resource "aws_vpc" "demo_vpc" {
-  cidr_block       = "10.0.0.0/16"
-  instance_tenancy = "default"
+  cidr_block       = var.cidr_block_vpc
+  instance_tenancy = var.instance_tenancy
 
   tags = {
     Name = "demo_vpc"
