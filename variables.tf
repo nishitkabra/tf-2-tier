@@ -40,3 +40,9 @@ variable "ingress_ports_pvt_sg" {
     type = list
     default = [22, 3306]
 }
+
+variable "bucket" {
+}
+
+variable "acl" {
+}
